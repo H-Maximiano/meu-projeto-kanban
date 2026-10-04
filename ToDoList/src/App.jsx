@@ -3,7 +3,8 @@ import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ContainerPricipal, DivCard, ContainerStatus } from './styles';
 
-const API_URL = 'http://18.119.10.104:8080/api/tarefas';
+// Apenas o caminho final. O Vercel vai saber para onde mandar!
+const API_URL = '/api/tarefas';
 
 function App() {
   const [tarefas, setTarefas] = useState([]);
