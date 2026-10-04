@@ -3,17 +3,15 @@ import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ContainerPricipal, DivCard, ContainerStatus } from './styles';
 
+const API_URL = 'http://18.119.10.104:8080/api/tarefas';
+
 function App() {
   const [tarefas, setTarefas] = useState([]);
   const [novaTarefaNome, setNovaTarefaNome] = useState('');
 
-  // 1. Busca as tarefas no Flask ao carregar a página
-  useEffect(() => {
-    carregarTarefas();
-  }, []);
-
+  // 1. Declaração da função antes do uso
   const carregarTarefas = () => {
-    axios.get('http://localhost:5000/api/tarefas')
+    axios.get(API_URL)
       .then(response => {
         setTarefas(response.data); 
       })
@@ -22,12 +20,17 @@ function App() {
       });
   };
 
+  // Busca as tarefas no Flask ao carregar a página
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
+
   // 2. Criar nova tarefa (POST)
   const adicionarTarefa = (e) => {
     e.preventDefault();
     if (!novaTarefaNome.trim()) return;
 
-    axios.post('http://localhost:5000/api/tarefas', { name: novaTarefaNome })
+    axios.post(API_URL, { name: novaTarefaNome })
       .then(response => {
         setTarefas([...tarefas, response.data]); // Adiciona na tela na hora
         setNovaTarefaNome(''); // Limpa o input
@@ -39,7 +42,7 @@ function App() {
 
   // 3. Deletar tarefa (DELETE)
   const deletarTarefa = (id) => {
-    axios.delete(`http://localhost:5000/api/tarefas/${id}`)
+    axios.delete(`${API_URL}/${id}`)
       .then(() => {
         // Remove do estado local para sumir da tela instantaneamente
         setTarefas(tarefas.filter(t => t.id !== id));
@@ -71,7 +74,7 @@ function App() {
       )
     );
 
-    axios.patch(`http://localhost:5000/api/tarefas/${tarefaId}/status`, {
+    axios.patch(`${API_URL}/${tarefaId}/status`, {
       status: novoStatus
     }).catch(error => {
       console.error("Erro ao atualizar status no Flask:", error);
